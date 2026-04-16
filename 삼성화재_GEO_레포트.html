@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>삼성화재 GEO 현황 분석 리포트</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --surface: #12121A;
+      --surface2: #1A1A26;
+      --border: #2A2A3A;
+      --text: #E8E8F0;
+      --text-dim: #8888A0;
+      --text-muted: #555568;
+      --blue: #3B82F6;
+      --blue-dim: rgba(59, 130, 246, 0.15);
+      --green: #10B981;
+      --green-dim: rgba(16, 185, 129, 0.15);
+      --red: #EF4444;
+      --red-dim: rgba(239, 68, 68, 0.15);
+      --orange: #F59E0B;
+      --orange-dim: rgba(245, 158, 11, 0.15);
+      --purple: #8B5CF6;
+      --purple-dim: rgba(139, 92, 246, 0.15);
+      --cyan: #06B6D4;
+      --cyan-dim: rgba(6, 182, 212, 0.15);
+      --samsung-blue: #1428A0;
+      --chatgpt: #10A37F;
+      --gemini: #8B5CF6;
+      --claude: #F59E0B;
+      --perplexity: #3B82F6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section {
+      padding: 60px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* COVER */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #0A0A1A 0%, #0F0F20 50%, var(--bg) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(20, 40, 160, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-label {
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .cover-title {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .cover-title span {
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-sub {
+      font-size: 18px;
+      color: var(--text-dim);
+      font-weight: 300;
+      margin-bottom: 48px;
+    }
+
+    .cover-meta {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cover-meta-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 24px;
+      text-align: center;
+    }
+
+    .cover-meta-num {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .cover-meta-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* SECTION HEADERS */
+    .section-num {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .section-insight {
+      font-size: 16px;
+      color: var(--text-dim);
+      max-width: 700px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .insight-badge {
+      display: inline-block;
+      background: var(--red-dim);
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .insight-badge.positive {
+      background: var(--green-dim);
+      color: var(--green);
+    }
+
+    .insight-badge.neutral {
+      background: var(--blue-dim);
+      color: var(--blue);
+    }
+
+    /* STAT CARDS */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .stat-card.chatgpt::before {
+      background: var(--chatgpt);
+    }
+
+    .stat-card.gemini::before {
+      background: var(--gemini);
+    }
+
+    .stat-card.claude::before {
+      background: var(--claude);
+    }
+
+    .stat-card.perplexity::before {
+      background: var(--perplexity);
+    }
+
+    .stat-card-llm {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-value {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .stat-card-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .stat-card-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* BAR CHARTS */
+    .bar-group {
+      margin-bottom: 32px;
+    }
+
+    .bar-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-dim);
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .bar-label {
+      width: 90px;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: right;
+      flex-shrink: 0;
+      color: var(--text-dim);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 28px;
+      background: var(--surface2);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      min-width: 40px;
+      transition: width 0.6s ease;
+    }
+
+    .bar-fill.chatgpt {
+      background: var(--chatgpt);
+    }
+
+    .bar-fill.gemini {
+      background: var(--gemini);
+    }
+
+    .bar-fill.claude {
+      background: var(--claude);
+    }
+
+    .bar-fill.perplexity {
+      background: var(--perplexity);
+    }
+
+    .bar-fill.samsung {
+      background: linear-gradient(90deg, #1428A0, #3B82F6);
+    }
+
+    .bar-fill.competitor {
+      background: #444;
+    }
+
+    .bar-value {
+      width: 55px;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* HEATMAP TABLE */
+    .heatmap-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 4px;
+      margin-bottom: 16px;
+    }
+
+    .heatmap-table th {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .heatmap-table th:first-child {
+      text-align: left;
+    }
+
+    .heatmap-table td {
+      padding: 14px 12px;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .heatmap-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      background: none !important;
+    }
+
+    .heat-high {
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+    }
+
+    .heat-mid {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+    }
+
+    .heat-low {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    .heat-zero {
+      background: var(--surface2);
+      color: var(--text-muted);
+    }
+
+    /* COMPARISON GRID */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .compare-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .compare-card-sub {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    /* DOMAIN LIST */
+    .domain-list {
+      list-style: none;
+    }
+
+    .domain-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .domain-item:last-child {
+      border-bottom: none;
+    }
+
+    .domain-name {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .domain-name.samsung {
+      color: var(--blue);
+    }
+
+    .domain-count {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* CALLOUT BOX */
+    .callout {
+      background: var(--surface);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 12px 12px 0;
+      padding: 24px 28px;
+      margin: 32px 0;
+    }
+
+    .callout.warning {
+      border-left-color: var(--red);
+    }
+
+    .callout.success {
+      border-left-color: var(--green);
+    }
+
+    .callout-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .callout-text {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    /* STACKED BAR */
+    .stacked-bar-container {
+      margin-bottom: 24px;
+    }
+
+    .stacked-bar-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .stacked-bar-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .stacked-bar {
+      height: 36px;
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--surface2);
+    }
+
+    .stacked-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .seg-samsung {
+      background: linear-gradient(90deg, #1428A0, #2563EB);
+    }
+
+    .seg-kb {
+      background: #6366F1;
+    }
+
+    .seg-db {
+      background: #A855F7;
+    }
+
+    .seg-hyundai {
+      background: #EC4899;
+    }
+
+    .seg-meritz {
+      background: #F97316;
+    }
+
+    .seg-other {
+      background: #374151;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    /* FUNNEL */
+    .funnel-stage {
+      margin-bottom: 20px;
+    }
+
+    .funnel-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .funnel-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .funnel-stage-name {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .funnel-bars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding-left: 48px;
+    }
+
+    .funnel-bar {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .funnel-bar-llm {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .funnel-bar-value {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 48px 32px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* DUAL COLUMN */
+    .dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .dual-full {
+      grid-column: 1 / -1;
+    }
+
+    /* NUMBER HIGHLIGHT */
+    .num-highlight {
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .num-unit {
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+
+    /* PILL TAGS */
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .pill.active {
+      background: var(--blue-dim);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    @media (max-width: 768px) {
+      .stat-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dual {
+        grid-template-columns: 1fr;
+      }
+
+      .funnel-bars {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cover-title {
+        font-size: 32px;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+
+      .container {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- COVER -->
+  <div class="section cover">
+    <div class="cover-content">
+      <div class="cover-label">GEO Visibility Audit Report</div>
+      <h1 class="cover-title">삼성화재 GEO 분석 레포트</span></h1>
+      <p class="cover-sub">4대 LLM 기반 생성형 검색 응답 분석 · 고객 여정 6단계 × 284개 질문</p>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <div class="cover-meta-num">4</div>
+          <div class="cover-meta-label">LLM 플랫폼</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-num">284</div>
+          <div class="cover-meta-label">질문 세트</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-num">7,456</div>
+          <div class="cover-meta-label">인용 URL 수집</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-num">6</div>
+          <div class="cover-meta-label">고객 여정 단계</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 01: EXECUTIVE SUMMARY -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 01</div>
+      <h2 class="section-title">핵심 요약: 브랜드를 말해야 비로소 보인다</h2>
+      <p class="section-insight">
+        "삼성화재"를 직접 언급한 질문에서는 평균 <strong>80%</strong> 이상의 LLM 답변이 삼성화재 URL을 인용합니다.<br>
+        그러나 브랜드를 언급하지 않은 일반 보험 질문에서는 그 비율이 <strong>13%</strong>로 급락합니다.<br>
+        이것이 현재 삼성화재 GEO의 가장 큰 구조적 과제입니다.
+      </p>
+
+      <div class="compare-grid" style="margin-bottom:40px">
+        <div class="compare-card" style="border-left: 4px solid var(--green);">
+          <div class="insight-badge positive">브랜드 언급</div>
+          <div class="compare-card-title" style="margin-bottom:20px">삼성화재 URL이 인용된 답변 비율</div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--chatgpt)">94%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">ChatGPT</div>
+            </div>
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--perplexity)">89%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Perplexity</div>
+            </div>
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--gemini)">78%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Gemini</div>
+            </div>
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--claude)">59%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Claude</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-card" style="border-left: 4px solid var(--red);">
+          <div class="insight-badge">브랜드 미언급</div>
+          <div class="compare-card-title" style="margin-bottom:20px">삼성화재 URL이 인용된 답변 비율</div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--gemini)">19%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Gemini</div>
+            </div>
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--perplexity)">17%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Perplexity</div>
+            </div>
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--claude)">9%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Claude</div>
+            </div>
+            <div style="flex:1;min-width:100px;text-align:center">
+              <div style="font-size:32px;font-weight:900;color:var(--chatgpt)">7%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">ChatGPT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">🚨 핵심 발견</div>
+        <div class="callout-text">
+          삼성화재는 '지명 검색'에서는 압도적 우위를 보이지만, 소비자가 "자동차보험 비교", "보험료 절약 방법" 같은 <strong>일반 보험 키워드</strong>로 질문할 때는 거의 노출되지
+          않습니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 02: LLM별 인용 생태계 (브랜드 언급/미언급 분리) -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 02</div>
+      <h2 class="section-title">LLM별 인용 행태: 플랫폼마다 완전히 다른 생태계</h2>
+      <p class="section-insight">
+        브랜드를 언급했을 때와 하지 않았을 때, LLM의 인용 구조가 완전히 달라집니다.<br>
+        각 플랫폼이 어떤 소스 풀에서 답변을 구성하는지를 이해해야 LLM별 맞춤 GEO 전략이 가능합니다.
+      </p>
+
+      <!-- ====== 브랜드 언급 ====== -->
+      <div class="insight-badge positive" style="margin-bottom:20px">브랜드 언급 — "삼성화재"를 포함한 질문 144개</div>
+
+      <div class="stat-row">
+        <div class="stat-card chatgpt">
+          <div class="stat-card-llm">ChatGPT</div>
+          <div class="stat-card-value" style="color:var(--chatgpt)">92.5%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 2.2개 URL · 총 320개 중 296개가 삼성</div>
+        </div>
+        <div class="stat-card perplexity">
+          <div class="stat-card-llm">Perplexity</div>
+          <div class="stat-card-value" style="color:var(--perplexity)">41.9%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 9.0개 URL · 총 1,296개 중 543개가 삼성</div>
+        </div>
+        <div class="stat-card claude">
+          <div class="stat-card-llm">Claude</div>
+          <div class="stat-card-value" style="color:var(--claude)">30.2%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 3.1개 URL · 총 450개 중 136개가 삼성</div>
+        </div>
+        <div class="stat-card gemini">
+          <div class="stat-card-llm">Gemini</div>
+          <div class="stat-card-value" style="color:var(--gemini)">18.7%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 11.3개 URL · 총 1,627개 중 304개가 삼성</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">브랜드 언급: 삼성화재 외 LLM이 함께 인용하는 소스</h3>
+      <div class="compare-grid" style="margin-bottom:40px">
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--chatgpt)">ChatGPT</div>
+          <div class="compare-card-sub">삼성 공식 92.4% — 외부 소스 거의 불필요</div>
+          <ul class="domain-list">
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">872</span></li>
+            <li class="domain-item"><span class="domain-name">law.go.kr</span><span class="domain-count">11</span></li>
+            <li class="domain-item"><span class="domain-name">contents.premium.naver.com</span><span
+                class="domain-count">10</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">10</span></li>
+            <li class="domain-item"><span class="domain-name">store.meritzfire.com</span><span
+                class="domain-count">8</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--perplexity)">Perplexity</div>
+          <div class="compare-card-sub">삼성 46% + 네이버 블로그 12% + 티스토리 6%</div>
+          <ul class="domain-list">
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">603</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--green)">blog.naver.com</span><span
+                class="domain-count">155</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">79</span></li>
+            <li class="domain-item"><span class="domain-name">youtube.com</span><span class="domain-count">36</span>
+            </li>
+            <li class="domain-item"><span class="domain-name">kin.naver.com</span><span class="domain-count">30</span>
+            </li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">26</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--gemini)">Gemini</div>
+          <div class="compare-card-sub">삼성 25% — 티스토리·유튜브·커뮤니티로 대폭 분산</div>
+          <ul class="domain-list">
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">401</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">156</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--red)">youtube.com</span><span
+                class="domain-count">72</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">51</span></li>
+            <li class="domain-item"><span class="domain-name">insjournal.co.kr</span><span
+                class="domain-count">48</span></li>
+            <li class="domain-item"><span class="domain-name">brunch.co.kr</span><span class="domain-count">46</span>
+            </li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--claude)">Claude</div>
+          <div class="compare-card-sub">삼성 30% — 비교·위키 보완 의존</div>
+          <ul class="domain-list">
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">136</span></li>
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">17</span>
+            </li>
+            <li class="domain-item"><span class="domain-name">hankyung.com</span><span class="domain-count">12</span>
+            </li>
+            <li class="domain-item"><span class="domain-name">namu.wiki</span><span class="domain-count">11</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">10</span></li>
+          </ul>
+        </div>
+      </div>
+
+
+
+      <!-- ====== 브랜드 미언급 ====== -->
+      <div class="insight-badge" style="margin-top:48px;margin-bottom:20px">브랜드 미언급 — "삼성화재"를 포함하지 않은 일반 보험 질문 140개
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card chatgpt">
+          <div class="stat-card-llm">ChatGPT</div>
+          <div class="stat-card-value" style="color:var(--chatgpt)">9.0%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 1.4개 URL · 총 199개 중 18개만 삼성</div>
+        </div>
+        <div class="stat-card perplexity">
+          <div class="stat-card-llm">Perplexity</div>
+          <div class="stat-card-value" style="color:var(--perplexity)">3.1%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 8.8개 URL · 총 1,239개 중 38개만 삼성</div>
+        </div>
+        <div class="stat-card claude">
+          <div class="stat-card-llm">Claude</div>
+          <div class="stat-card-value" style="color:var(--claude)">2.8%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 3.5개 URL · 총 494개 중 14개만 삼성</div>
+        </div>
+        <div class="stat-card gemini">
+          <div class="stat-card-llm">Gemini</div>
+          <div class="stat-card-value" style="color:var(--gemini)">2.2%</div>
+          <div class="stat-card-label">삼성화재 URL 비율</div>
+          <div class="stat-card-sub">답변당 13.1개 URL · 총 1,831개 중 41개만 삼성</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">브랜드 미언급: LLM이 인용하는 소스 순위 (삼성화재 포함)</h3>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--chatgpt)">ChatGPT <span
+              style="font-size:12px;color:var(--text-muted);font-weight:400">총 199 URLs</span></div>
+          <div class="compare-card-sub">삼성 2위 — 미국 보험 기관에 밀림, KB손보와 접전</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name">content.naic.org</span><span
+                class="domain-count">64</span></li>
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">50</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--purple)">kbinsure.co.kr</span><span
+                class="domain-count" style="color:var(--purple)">22</span></li>
+            <li class="domain-item"><span class="domain-name"
+                style="color:var(--purple)">insight.kbinsure.co.kr</span><span class="domain-count"
+                style="color:var(--purple)">29</span></li>
+            <li class="domain-item"><span class="domain-name">consumer.knia.or.kr</span><span
+                class="domain-count">22</span></li>
+            <li class="domain-item"><span class="domain-name">geico.com</span><span class="domain-count">19</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">6</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--perplexity)">Perplexity <span
+              style="font-size:12px;color:var(--text-muted);font-weight:400">총 1,239 URLs</span></div>
+          <div class="compare-card-sub">삼성 6위 — 네이버 블로그·유튜브·티스토리 아래로 밀림</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name" style="color:var(--green)">blog.naver.com</span><span
+                class="domain-count" style="color:var(--green)">150</span></li>
+            <li class="domain-item"><span class="domain-name">youtube.com</span><span class="domain-count">119</span>
+            </li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">78</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">55</span></li>
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">39</span>
+            </li>
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">39</span></li>
+            <li class="domain-item"><span class="domain-name">brunch.co.kr</span><span class="domain-count">21</span>
+            </li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--gemini)">Gemini <span
+              style="font-size:12px;color:var(--text-muted);font-weight:400">총 1,831 URLs</span></div>
+          <div class="compare-card-sub">삼성 7위 — 티스토리·유튜브·커뮤니티에 완전히 묻힘</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">143</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--red)">youtube.com</span><span
+                class="domain-count" style="color:var(--red)">119</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">105</span></li>
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">58</span>
+            </li>
+            <li class="domain-item"><span class="domain-name">insjournal.co.kr</span><span
+                class="domain-count">42</span></li>
+            <li class="domain-item"><span class="domain-name">brunch.co.kr</span><span class="domain-count">37</span>
+            </li>
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">46</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--claude)">Claude <span
+              style="font-size:12px;color:var(--text-muted);font-weight:400">총 494 URLs</span></div>
+          <div class="compare-card-sub">삼성 6위 — 뱅샐·KB손보·a-ha 아래로 밀림</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">42</span>
+            </li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--purple)">kbthink.com</span><span
+                class="domain-count" style="color:var(--purple)">20</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">18</span></li>
+            <li class="domain-item"><span class="domain-name">namu.wiki</span><span class="domain-count">16</span></li>
+            <li class="domain-item"><span class="domain-name">money.clubkorea.co.kr</span><span
+                class="domain-count">15</span></li>
+            <li class="domain-item"
+              style="background:var(--blue-dim);margin:0 -12px;padding:8px 12px;border-radius:6px"><span
+                class="domain-name samsung">삼성화재 도메인 (합산)</span><span class="domain-count"
+                style="color:var(--blue)">14</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">🚨 브랜드 미언급 핵심 발견</div>
+        <div class="callout-text">
+          브랜드를 명시하지 않으면 <strong>모든 LLM에서 삼성화재 URL 비율이 2~9%로 급락</strong>합니다.
+          특히 ChatGPT에서는 미국 보험 기관(NAIC)과 <span style="color:var(--purple);font-weight:600">KB손해보험</span>이 삼성화재보다 더 많이
+          인용되고,
+          Claude에서는 <span style="color:var(--purple);font-weight:600">kbthink.com(KB손보)</span>이 비삼성 2위에 위치합니다.
+          Gemini·Perplexity에서는 <span style="color:var(--orange);font-weight:600">티스토리(합산 221개)</span>, 유튜브, 네이버 블로그 등 <strong>UGC 플랫폼이 정보의 주요 출처</strong>를 장악하고 있어, 이 채널에서의 삼성화재 콘텐츠 확보가 GEO 전략의
+          핵심입니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 03: JOURNEY HEATMAP -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 03</div>
+      <h2 class="section-title">고객 여정별 GEO 히트맵</h2>
+      <p class="section-insight">
+        질문에 "삼성화재"를 포함했을 때, LLM 답변에 삼성화재 URL이 인용되는 비율입니다.<br>
+        ChatGPT는 가입·유지·갱신 단계에서 100% 인용률을 보이지만, Claude는 전 여정에서 상대적으로 약합니다.
+      </p>
+
+      <div class="insight-badge positive">브랜드 언급 — 삼성화재 URL 인용 질문 비율</div>
+      <table class="heatmap-table" style="margin-top:12px">
+        <thead>
+          <tr>
+            <th style="width:120px">여정 단계</th>
+            <th>ChatGPT</th>
+            <th>Gemini</th>
+            <th>Claude</th>
+            <th>Perplexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>👁️ 인지</td>
+            <td class="heat-high">85%</td>
+            <td class="heat-high">81%</td>
+            <td class="heat-mid">65%</td>
+            <td class="heat-high">88%</td>
+          </tr>
+          <tr>
+            <td>🔍 탐색</td>
+            <td class="heat-high">96%</td>
+            <td class="heat-high">81%</td>
+            <td class="heat-mid">62%</td>
+            <td class="heat-high">96%</td>
+          </tr>
+          <tr>
+            <td>✍️ 가입</td>
+            <td class="heat-high">100%</td>
+            <td class="heat-mid">72%</td>
+            <td class="heat-mid">52%</td>
+            <td class="heat-high">80%</td>
+          </tr>
+          <tr>
+            <td>🔄 유지</td>
+            <td class="heat-high">100%</td>
+            <td class="heat-high">96%</td>
+            <td class="heat-mid">58%</td>
+            <td class="heat-high">92%</td>
+          </tr>
+          <tr>
+            <td>📋 갱신</td>
+            <td class="heat-high">100%</td>
+            <td class="heat-low">48%</td>
+            <td class="heat-mid">52%</td>
+            <td class="heat-high">100%</td>
+          </tr>
+          <tr>
+            <td>💰 보상</td>
+            <td class="heat-high">86%</td>
+            <td class="heat-high">86%</td>
+            <td class="heat-mid">64%</td>
+            <td class="heat-high">77%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="insight-badge" style="margin-top:32px">브랜드 미언급 — 삼성화재 URL 인용 질문 비율</div>
+      <table class="heatmap-table" style="margin-top:12px">
+        <thead>
+          <tr>
+            <th style="width:120px">여정 단계</th>
+            <th>ChatGPT</th>
+            <th>Gemini</th>
+            <th>Claude</th>
+            <th>Perplexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>👁️ 인지</td>
+            <td class="heat-low">8%</td>
+            <td class="heat-low">19%</td>
+            <td class="heat-low">15%</td>
+            <td class="heat-low">8%</td>
+          </tr>
+          <tr>
+            <td>🔍 탐색</td>
+            <td class="heat-zero">0%</td>
+            <td class="heat-low">15%</td>
+            <td class="heat-low">8%</td>
+            <td class="heat-low">12%</td>
+          </tr>
+          <tr>
+            <td>✍️ 가입</td>
+            <td class="heat-low">16%</td>
+            <td class="heat-low">12%</td>
+            <td class="heat-zero">0%</td>
+            <td class="heat-low">12%</td>
+          </tr>
+          <tr>
+            <td>🔄 유지</td>
+            <td class="heat-zero">0%</td>
+            <td class="heat-low">12%</td>
+            <td class="heat-low">17%</td>
+            <td class="heat-zero">0%</td>
+          </tr>
+          <tr>
+            <td>📋 갱신</td>
+            <td class="heat-low">5%</td>
+            <td class="heat-low">15%</td>
+            <td class="heat-low">5%</td>
+            <td class="heat-mid">30%</td>
+          </tr>
+          <tr>
+            <td>💰 보상</td>
+            <td class="heat-low">16%</td>
+            <td class="heat-mid">47%</td>
+            <td class="heat-low">11%</td>
+            <td class="heat-mid">53%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">💡 보상 단계의 예외적 패턴</div>
+        <div class="callout-text">
+          브랜드 미언급 질문에서도 <strong>보상 단계</strong>만은 Gemini 47%, Perplexity 53%로 상대적으로 높은 노출을 보입니다.
+          이는 삼성화재의 보험금 청구·사고 접수 관련 콘텐츠가 외부에서도 충분히 인용될 만큼 경쟁력이 있다는 신호입니다.
+          반면 <strong>탐색·가입·유지</strong> 단계에서는 브랜드 미언급 시 거의 노출이 없어, 이 구간에서의 콘텐츠 강화가 시급합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 04: COMPETITOR (브랜드 언급/미언급 분리) -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 04</div>
+      <h2 class="section-title">경쟁사 대비 AI 검색 점유율</h2>
+      <p class="section-insight">
+        브랜드를 언급하면 삼성화재가 압도적이지만, 미언급 시에는 KB손해보험이 삼성화재를 추월하는 LLM이 있습니다.<br>
+        보험사 간 점유율뿐 아니라, 비보험사(3자 플랫폼)가 차지하는 비율도 함께 읽어야 합니다.
+      </p>
+
+      <!-- 브랜드 언급 -->
+      <div class="insight-badge positive" style="margin-bottom:16px">브랜드 언급 — 보험사 URL 점유율</div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--chatgpt)">ChatGPT</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 320 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-samsung" style="width:92.5%">삼성화재 92.5%</div>
+          <div class="stacked-segment seg-meritz" style="width:1.2%"></div>
+          <div class="stacked-segment seg-hyundai" style="width:0.9%"></div>
+          <div class="stacked-segment seg-other" style="width:5.3%"></div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--perplexity)">Perplexity</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 1,296 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-samsung" style="width:41.9%">삼성화재 41.9%</div>
+          <div class="stacked-segment seg-kb" style="width:0.5%"></div>
+          <div class="stacked-segment seg-other" style="width:57.6%"></div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--claude)">Claude</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 450 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-samsung" style="width:30.2%">삼성 30.2%</div>
+          <div class="stacked-segment seg-kb" style="width:2.7%"></div>
+          <div class="stacked-segment seg-hyundai" style="width:0.7%"></div>
+          <div class="stacked-segment seg-other" style="width:66%"></div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--gemini)">Gemini</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 1,627 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-samsung" style="width:18.7%">삼성 18.7%</div>
+          <div class="stacked-segment seg-kb" style="width:1.2%"></div>
+          <div class="stacked-segment seg-db" style="width:0.5%"></div>
+          <div class="stacked-segment seg-other" style="width:79.5%"></div>
+        </div>
+      </div>
+
+      <!-- 브랜드 미언급 -->
+      <div class="insight-badge" style="margin-top:40px;margin-bottom:16px">브랜드 미언급 — 보험사 URL 점유율</div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--chatgpt)">ChatGPT</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 199 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-kb" style="width:10.1%">KB 10.1%</div>
+          <div class="stacked-segment seg-samsung" style="width:9.0%">삼성 9.0%</div>
+          <div class="stacked-segment seg-meritz" style="width:2.0%"></div>
+          <div class="stacked-segment seg-other" style="width:78.4%"></div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--perplexity)">Perplexity</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 1,239 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-samsung" style="width:3.1%"></div>
+          <div class="stacked-segment seg-kb" style="width:2.7%"></div>
+          <div class="stacked-segment seg-db" style="width:1.9%"></div>
+          <div class="stacked-segment seg-hyundai" style="width:1.7%"></div>
+          <div class="stacked-segment seg-other" style="width:90%"></div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--claude)">Claude</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 494 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-kb" style="width:6.3%">KB 6.3%</div>
+          <div class="stacked-segment seg-samsung" style="width:2.8%"></div>
+          <div class="stacked-segment seg-db" style="width:2.4%"></div>
+          <div class="stacked-segment seg-hyundai" style="width:1.4%"></div>
+          <div class="stacked-segment seg-other" style="width:86.8%"></div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar-label-row">
+          <span class="stacked-bar-name" style="color:var(--gemini)">Gemini</span>
+          <span style="font-size:12px;color:var(--text-muted)">총 1,831 URLs</span>
+        </div>
+        <div class="stacked-bar">
+          <div class="stacked-segment seg-kb" style="width:3.5%">KB 3.5%</div>
+          <div class="stacked-segment seg-samsung" style="width:2.2%"></div>
+          <div class="stacked-segment seg-db" style="width:1.3%"></div>
+          <div class="stacked-segment seg-hyundai" style="width:0.8%"></div>
+          <div class="stacked-segment seg-other" style="width:91.8%"></div>
+        </div>
+      </div>
+
+      <div class="legend" style="margin-top:16px">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:linear-gradient(90deg, #1428A0, #2563EB)"></div>삼성화재
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#6366F1"></div>KB손해보험
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#A855F7"></div>DB손해보험
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#EC4899"></div>현대해상
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#F97316"></div>메리츠화재
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#374151"></div>기타 (비보험사)
+        </div>
+      </div>
+
+      <div class="callout warning" style="margin-top:32px">
+        <div class="callout-title">🚨 브랜드 미언급 시 역전 현상</div>
+        <div class="callout-text">
+          브랜드를 언급하면 삼성화재가 모든 LLM에서 보험사 1위이지만, <strong>미언급 시 ChatGPT·Claude·Gemini 3개 LLM에서 KB손해보험에 1위를 빼앗깁니다.</strong>
+          Perplexity에서만 삼성화재가 보험사 중 1위를 유지하지만, 그 격차도 3.1% vs 2.7%로 근소합니다.
+          비보험사(3자 플랫폼)가 전체의 78~92%를 차지하므로, 보험사 간 경쟁보다 <strong>3자 플랫폼에서의 존재감 확보</strong>가 실질적 승부처입니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 05: ORGANIC BRAND RECALL -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 05</div>
+      <h2 class="section-title">비브랜드 질문에서의 자연 노출력</h2>
+      <p class="section-insight">
+        "삼성화재"를 언급하지 않은 일반 보험 질문 140개에서,<br>
+        LLM이 삼성화재를 답변 텍스트에 자발적으로 언급하는 비율을 측정했습니다.<br>
+        이 지표는 AI가 삼성화재를 "보험 = 삼성화재"로 연상하는 정도를 보여줍니다.
+      </p>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px">
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+          <div
+            style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
+            Perplexity</div>
+          <div style="font-size:42px;font-weight:900;color:var(--perplexity)">27%</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">38 / 140 질문</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+          <div
+            style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
+            Gemini</div>
+          <div style="font-size:42px;font-weight:900;color:var(--gemini)">23%</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">32 / 140 질문</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+          <div
+            style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
+            Claude</div>
+          <div style="font-size:42px;font-weight:900;color:var(--claude)">16%</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">22 / 140 질문</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+          <div
+            style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
+            ChatGPT</div>
+          <div style="font-size:42px;font-weight:900;color:var(--chatgpt)">12%</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">17 / 140 질문</div>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ 의미</div>
+        <div class="callout-text">
+          가장 높은 Perplexity조차 27%에 불과합니다. <strong>10명의 소비자 중 7~9명이 일반 보험 질문을 했을 때 삼성화재를 추천받지 못합니다.</strong>
+          이는 삼성화재의 브랜드 파워가 AI 학습 데이터와 실시간 검색 결과에서 충분히 반영되지 못하고 있다는 것을 의미합니다.
+          GEO 전략의 핵심 목표는 이 비율을 끌어올리는 것이어야 합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 06: 3자 소스 생태계 -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 06</div>
+      <h2 class="section-title">AI가 참조하는 3자 콘텐츠 생태계</h2>
+      <p class="section-insight">
+        LLM들은 공식 도메인뿐 아니라 블로그, 유튜브, 비교 사이트, 커뮤니티 등 다양한 3자 소스를 적극 활용합니다.<br>
+        이 외부 플랫폼에서 삼성화재가 어떻게 언급되느냐가 비브랜드 질문 노출의 핵심 열쇠입니다.
+      </p>
+
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">브랜드 미언급 질문 시 LLM이 참조하는 비삼성 Top 소스</h3>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--perplexity)">Perplexity</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name" style="color:var(--green)">blog.naver.com</span><span
+                class="domain-count" style="color:var(--green)">150</span></li>
+            <li class="domain-item"><span class="domain-name">youtube.com</span><span class="domain-count">119</span>
+            </li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">78</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">55</span></li>
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">39</span>
+            </li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--gemini)">Gemini</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name" style="color:var(--orange)">tistory.com (합산)</span><span
+                class="domain-count" style="color:var(--orange)">143</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--red)">youtube.com</span><span
+                class="domain-count" style="color:var(--red)">119</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">105</span></li>
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">58</span>
+            </li>
+            <li class="domain-item"><span class="domain-name">insjournal.co.kr</span><span
+                class="domain-count">42</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--claude)">Claude</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name">banksalad.com</span><span class="domain-count">42</span>
+            </li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--purple)">kbthink.com</span><span
+                class="domain-count" style="color:var(--purple)">20</span></li>
+            <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">18</span></li>
+            <li class="domain-item"><span class="domain-name">namu.wiki</span><span class="domain-count">16</span></li>
+            <li class="domain-item"><span class="domain-name">money.clubkorea.co.kr</span><span
+                class="domain-count">15</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title" style="color:var(--chatgpt)">ChatGPT</div>
+          <ul class="domain-list">
+            <li class="domain-item"><span class="domain-name">content.naic.org</span><span
+                class="domain-count">21</span></li>
+            <li class="domain-item"><span class="domain-name" style="color:var(--purple)">kbinsure.co.kr</span><span
+                class="domain-count" style="color:var(--purple)">9</span></li>
+            <li class="domain-item"><span class="domain-name"
+                style="color:var(--purple)">insight.kbinsure.co.kr</span><span class="domain-count"
+                style="color:var(--purple)">9</span></li>
+            <li class="domain-item"><span class="domain-name">consumer.knia.or.kr</span><span
+                class="domain-count">8</span></li>
+            <li class="domain-item"><span class="domain-name">geico.com</span><span class="domain-count">6</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">🎯 GEO 전략 핵심 타겟 플랫폼</div>
+        <div class="callout-text">
+          <strong>티스토리(합산 221개), 네이버 블로그, 유튜브, a-ha.io, 뱅크샐러드, 브런치</strong> — 이 6개 플랫폼이 비브랜드 질문에서 LLM이 가장 많이 참조하는 3자 소스입니다.
+          특히 <span style="color:var(--orange);font-weight:600">티스토리</span>는 서브도메인(xxx.tistory.com) 구조로 개별 집계 시 보이지 않지만, 합산하면 Gemini 1위(143개), Perplexity 3위(78개)를 차지하는 핵심 소스입니다.
+          이 플랫폼들에서 삼성화재 관련 양질의 콘텐츠가 충분히 존재하고 노출되는지가 GEO 성과를 직접적으로 좌우합니다.
+          또한 Claude에서 <span style="color:var(--purple);font-weight:600">KB손해보험(kbthink.com)</span>이 비삼성 2위에 올라 있는 점은 주목할
+          필요가 있습니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 07: SUBDOMAIN -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 07</div>
+      <h2 class="section-title">삼성화재 서브도메인 인용 구조</h2>
+      <p class="section-insight">
+        LLM이 인용하는 삼성화재 URL의 서브도메인 분포를 분석하면,<br>
+        어떤 자산(다이렉트, 기업 사이트, PR 등)이 AI 검색에서 실질적으로 작동하는지 알 수 있습니다.
+      </p>
+
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px">
+        <div>
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">인용 빈도 순위 (4개 LLM 합산)</h3>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
+
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span
+                  style="font-size:13px;font-weight:600">samsungfire.com <span
+                    style="color:var(--text-muted);font-weight:400">(기업 메인)</span></span><span
+                  style="font-weight:700">585</span></div>
+              <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
+                <div style="width:100%;height:100%;background:linear-gradient(90deg,#1428A0,#3B82F6);border-radius:5px">
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span
+                  style="font-size:13px;font-weight:600">direct.samsungfire.com <span
+                    style="color:var(--text-muted);font-weight:400">(다이렉트)</span></span><span
+                  style="font-weight:700">538</span></div>
+              <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
+                <div style="width:92%;height:100%;background:linear-gradient(90deg,#2563EB,#60A5FA);border-radius:5px">
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span
+                  style="font-size:13px;font-weight:600">d.samsungfire.com <span
+                    style="color:var(--text-muted);font-weight:400">(모바일 다이렉트)</span></span><span
+                  style="font-weight:700">89</span></div>
+              <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
+                <div style="width:15%;height:100%;background:#818CF8;border-radius:5px"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span
+                  style="font-size:13px;font-weight:600">samsungfire.co.kr</span><span style="font-weight:700">59</span>
+              </div>
+              <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
+                <div style="width:10%;height:100%;background:#A78BFA;border-radius:5px"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span
+                  style="font-size:13px;font-weight:600">m.samsungfire.com <span
+                    style="color:var(--text-muted);font-weight:400">(모바일)</span></span><span
+                  style="font-weight:700">25</span></div>
+              <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
+                <div style="width:4.3%;height:100%;background:#C4B5FD;border-radius:5px"></div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:0">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span
+                  style="font-size:13px;font-weight:600">pr.samsungfire.com <span
+                    style="color:var(--text-muted);font-weight:400">(PR/보도자료)</span></span><span
+                  style="font-weight:700">14</span></div>
+              <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
+                <div style="width:2.4%;height:100%;background:#DDD6FE;border-radius:5px"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">서브도메인별 역할 분석</h3>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
+            <div style="margin-bottom:20px">
+              <div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:4px">samsungfire.com +
+                direct.samsungfire.com</div>
+              <div style="font-size:13px;color:var(--text-dim);line-height:1.7">전체 인용의 <strong>85%</strong>를 차지하는 양대 핵심
+                자산. 기업 정보와 다이렉트 상품 페이지가 AI 검색의 주요 소스 역할을 함.</div>
+            </div>
+            <div style="margin-bottom:20px">
+              <div style="font-size:14px;font-weight:700;color:var(--orange);margin-bottom:4px">d.samsungfire.com (모바일
+                다이렉트)</div>
+              <div style="font-size:13px;color:var(--text-dim);line-height:1.7">ChatGPT에서만 50회 인용되며 다른 LLM에서는 낮음.
+                ChatGPT가 모바일 경로도 독립적으로 크롤링하는 것으로 보임.</div>
+            </div>
+            <div style="margin-bottom:0">
+              <div style="font-size:14px;font-weight:700;color:var(--purple);margin-bottom:4px">pr.samsungfire.com
+                (PR/보도자료)</div>
+              <div style="font-size:13px;color:var(--text-dim);line-height:1.7">ChatGPT 14회 외에는 거의 인용되지 않음. PR 콘텐츠가 AI
+                검색에서 활용되려면 구조화된 마크업과 크롤링 허용 설정이 필요.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 08: 브랜드 언급 질문 심층 분석 -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 08</div>
+      <h2 class="section-title">삼성화재 포함 질문: 답변 품질 심층 분석</h2>
+      <p class="section-insight">
+        "삼성화재"를 명시한 144개 질문에 대한 LLM 답변의 인용 출처 구성, 감정 톤, 핵심 응답 주제를 분석합니다.
+      </p>
+
+      <!-- 인용 출처: 공식 vs 외부 -->
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px">인용 출처 — 공식 도메인 vs 외부 소스</h3>
+
+      <div class="stat-row">
+        <div class="stat-card chatgpt">
+          <div class="stat-card-llm">ChatGPT</div>
+          <div style="display:flex;gap:8px;align-items:baseline">
+            <div style="font-size:32px;font-weight:900;color:var(--chatgpt)">92.5%</div>
+            <div style="font-size:14px;color:var(--text-dim)">공식</div>
+          </div>
+          <div class="stat-card-sub">공식 296개 · 외부 24개</div>
+        </div>
+        <div class="stat-card perplexity">
+          <div class="stat-card-llm">Perplexity</div>
+          <div style="display:flex;gap:8px;align-items:baseline">
+            <div style="font-size:32px;font-weight:900;color:var(--perplexity)">41.9%</div>
+            <div style="font-size:14px;color:var(--text-dim)">공식</div>
+          </div>
+          <div class="stat-card-sub">공식 543개 · 외부 753개</div>
+        </div>
+        <div class="stat-card claude">
+          <div class="stat-card-llm">Claude</div>
+          <div style="display:flex;gap:8px;align-items:baseline">
+            <div style="font-size:32px;font-weight:900;color:var(--claude)">30.2%</div>
+            <div style="font-size:14px;color:var(--text-dim)">공식</div>
+          </div>
+          <div class="stat-card-sub">공식 136개 · 외부 314개</div>
+        </div>
+        <div class="stat-card gemini">
+          <div class="stat-card-llm">Gemini</div>
+          <div style="display:flex;gap:8px;align-items:baseline">
+            <div style="font-size:32px;font-weight:900;color:var(--gemini)">18.7%</div>
+            <div style="font-size:14px;color:var(--text-dim)">공식</div>
+          </div>
+          <div class="stat-card-sub">공식 304개 · 외부 1,323개</div>
+        </div>
+      </div>
+
+
+      <!-- 감정 분석 -->
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;margin-top:48px">답변 감정 분석</h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:20px">답변에 포함된 키워드 기반 긍정·중립·부정 분류 (추천/편리/할인 = 긍정,
+        단점/비싸/불편 = 부정)</p>
+
+      <div class="stat-row">
+        <div class="stat-card chatgpt">
+          <div class="stat-card-llm">ChatGPT</div>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--green)">27%</div>
+              <div style="font-size:11px;color:var(--text-muted)">긍정</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--text-muted)">33%</div>
+              <div style="font-size:11px;color:var(--text-muted)">중립</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--red)">40%</div>
+              <div style="font-size:11px;color:var(--text-muted)">부정</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card gemini">
+          <div class="stat-card-llm">Gemini</div>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--green)">37%</div>
+              <div style="font-size:11px;color:var(--text-muted)">긍정</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--text-muted)">25%</div>
+              <div style="font-size:11px;color:var(--text-muted)">중립</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--red)">38%</div>
+              <div style="font-size:11px;color:var(--text-muted)">부정</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card claude">
+          <div class="stat-card-llm">Claude</div>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--green)">39%</div>
+              <div style="font-size:11px;color:var(--text-muted)">긍정</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--text-muted)">24%</div>
+              <div style="font-size:11px;color:var(--text-muted)">중립</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--red)">38%</div>
+              <div style="font-size:11px;color:var(--text-muted)">부정</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card perplexity">
+          <div class="stat-card-llm">Perplexity</div>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--green)">34%</div>
+              <div style="font-size:11px;color:var(--text-muted)">긍정</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--text-muted)">26%</div>
+              <div style="font-size:11px;color:var(--text-muted)">중립</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:24px;font-weight:800;color:var(--red)">40%</div>
+              <div style="font-size:11px;color:var(--text-muted)">부정</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ 부정 톤 우세</div>
+        <div class="callout-text">
+          4개 LLM 모두 <strong>38~40%의 답변이 부정적 톤</strong>을 포함하며, 긍정 톤(27~39%)보다 높습니다. "비싸다", "보장 범위 제한", "타사 대비 불리" 등의 키워드가
+          빈번합니다.
+          Claude가 가장 높은 긍정률(39%)을 보이며, ChatGPT가 가장 낮은 긍정률(27%)을 기록합니다.
+        </div>
+      </div>
+
+      <!-- 핵심 응답 주제 -->
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;margin-top:48px">답변 핵심 주제 키워드</h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:20px">4개 LLM 답변에서 공통적으로 높은 빈도를 보이는 주제 키워드</p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--blue)">447</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">가입</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--blue)">295</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">보험료</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--blue)">295</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">보장</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--blue)">243</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">자동차</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--cyan)">232</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">다이렉트</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--cyan)">217</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">보상</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--cyan)">179</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">고객센터</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--cyan)">169</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">청구</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--text-dim)">166</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">비교</div>
+        </div>
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--text-dim)">140</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">앱</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 09: 브랜드 미언급 질문 심층 분석 -->
+  <div class="section">
+    <div class="container">
+      <div class="section-num">Section 09</div>
+      <h2 class="section-title">삼성화재 미포함 질문: 자발적 언급 심층 분석</h2>
+      <p class="section-insight">
+        "삼성화재"를 포함하지 않은 일반 보험 질문 140개에서,<br>
+        LLM이 삼성화재를 자발적으로 언급했는지 여부와 그 맥락을 분석합니다.
+      </p>
+
+      <!-- 언급 여부 요약 -->
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px">삼성화재 자발적 언급 여부</h3>
+
+      <div class="stat-row" style="margin-bottom:32px">
+        <div class="stat-card perplexity">
+          <div class="stat-card-llm">Perplexity</div>
+          <div style="display:flex;gap:20px;align-items:baseline;margin-top:8px">
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--green)">31</div>
+              <div style="font-size:11px;color:var(--text-muted)">언급 (22.1%)</div>
+            </div>
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--red)">109</div>
+              <div style="font-size:11px;color:var(--text-muted)">미언급 (77.9%)</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card gemini">
+          <div class="stat-card-llm">Gemini</div>
+          <div style="display:flex;gap:20px;align-items:baseline;margin-top:8px">
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--green)">29</div>
+              <div style="font-size:11px;color:var(--text-muted)">언급 (21%)</div>
+            </div>
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--red)">111</div>
+              <div style="font-size:11px;color:var(--text-muted)">미언급 (79%)</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card claude">
+          <div class="stat-card-llm">Claude</div>
+          <div style="display:flex;gap:20px;align-items:baseline;margin-top:8px">
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--green)">20</div>
+              <div style="font-size:11px;color:var(--text-muted)">언급 (14%)</div>
+            </div>
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--red)">120</div>
+              <div style="font-size:11px;color:var(--text-muted)">미언급 (86%)</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card chatgpt">
+          <div class="stat-card-llm">ChatGPT</div>
+          <div style="display:flex;gap:20px;align-items:baseline;margin-top:8px">
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--green)">12</div>
+              <div style="font-size:11px;color:var(--text-muted)">언급 (9%)</div>
+            </div>
+            <div>
+              <div style="font-size:28px;font-weight:900;color:var(--red)">128</div>
+              <div style="font-size:11px;color:var(--text-muted)">미언급 (91%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 언급 시 분석 -->
+      <div class="insight-badge positive" style="margin-bottom:16px">삼성화재를 자발적으로 언급한 경우</div>
+
+      <div class="compare-grid" style="margin-bottom:32px">
+        <div class="compare-card">
+          <div class="compare-card-title">언급 감정 분석</div>
+          <div class="compare-card-sub">삼성화재를 언급할 때의 답변 톤</div>
+          <table class="heatmap-table" style="margin-top:8px">
+            <thead>
+              <tr>
+                <th></th>
+                <th>긍정</th>
+                <th>중립</th>
+                <th>부정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:13px">ChatGPT</td>
+                <td class="heat-mid" style="font-size:14px">42%</td>
+                <td class="heat-low" style="font-size:14px">25%</td>
+                <td class="heat-mid" style="font-size:14px">33%</td>
+              </tr>
+              <tr>
+                <td style="font-size:13px">Gemini</td>
+                <td class="heat-mid" style="font-size:14px">41%</td>
+                <td class="heat-mid" style="font-size:14px">31%</td>
+                <td class="heat-mid" style="font-size:14px">28%</td>
+              </tr>
+              <tr>
+                <td style="font-size:13px">Perplexity</td>
+                <td class="heat-mid" style="font-size:14px">39%</td>
+                <td class="heat-mid" style="font-size:14px">45%</td>
+                <td class="heat-low" style="font-size:14px">16%</td>
+              </tr>
+              <tr>
+                <td style="font-size:13px">Claude</td>
+                <td class="heat-low" style="font-size:14px">30%</td>
+                <td class="heat-high" style="font-size:14px">50%</td>
+                <td class="heat-low" style="font-size:14px">20%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-card-title">언급 순위 · 출처</div>
+          <div class="compare-card-sub">답변 내 보험사 나열 순서에서 삼성화재의 위치</div>
+          <ul class="domain-list" style="margin-top:12px">
+            <li class="domain-item">
+              <span class="domain-name" style="color:var(--chatgpt);font-weight:700">ChatGPT</span>
+              <span style="font-size:13px">평균 <strong style="color:var(--green)">1.0위</strong> · 12회 중 12회 1위</span>
+            </li>
+            <li class="domain-item">
+              <span class="domain-name" style="color:var(--claude);font-weight:700">Claude</span>
+              <span style="font-size:13px">평균 <strong style="color:var(--green)">1.1위</strong> · 20회 중 17회 1위</span>
+            </li>
+            <li class="domain-item">
+              <span class="domain-name" style="color:var(--gemini);font-weight:700">Gemini</span>
+              <span style="font-size:13px">평균 <strong style="color:var(--green)">1.3위</strong> · 29회 중 25회 1위</span>
+            </li>
+            <li class="domain-item">
+              <span class="domain-name" style="color:var(--perplexity);font-weight:700">Perplexity</span>
+              <span style="font-size:13px">평균 <strong style="color:var(--green)">1.3위</strong> · 31회 중 26회 1위</span>
+            </li>
+          </ul>
+          <div
+            style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:13px;color:var(--text-dim)">
+            <strong style="color:var(--text)">주요 인용 출처:</strong> samsungfire.com, direct.samsungfire.com,
+            blog.naver.com, youtube.com
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ 언급 시 감정은 혼재</div>
+        <div class="callout-text">
+          삼성화재를 자발적으로 언급하는 경우, <strong>긍정 톤은 30~42%이며 중립·부정 톤이 상당 비중</strong>을 차지합니다. Claude는 중립 톤(50%)이 가장 높고, ChatGPT가
+          가장 높은 긍정률(42%)을 보입니다.
+          언급 빈도 자체가 전체의 9~22%에 불과하여, 노출 확대와 함께 긍정 톤 콘텐츠 강화가 필요합니다.
+        </div>
+      </div>
+
+      <!-- 미언급 시 분석 -->
+      <div class="insight-badge" style="margin-top:48px;margin-bottom:16px">삼성화재를 언급하지 않은 경우</div>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-card-title">삼성화재 대신 언급된 경쟁사</div>
+          <div class="compare-card-sub">삼성화재가 빠진 자리를 채우는 보험사</div>
+
+          <div style="margin-top:16px">
+            <div style="font-size:13px;font-weight:600;color:var(--chatgpt);margin-bottom:8px">ChatGPT <span
+                style="color:var(--text-muted);font-weight:400">(128개 답변 중)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+              <span class="pill active"
+                style="border-color:var(--purple);background:var(--purple-dim);color:var(--purple)">KB손해보험 8회</span>
+              <span class="pill">메리츠화재 4회</span>
+              <span class="pill">DB손해보험 1회</span>
+              <span class="pill">현대해상 1회</span>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--perplexity);margin-bottom:8px">Perplexity <span
+                style="color:var(--text-muted);font-weight:400">(109개 답변 중)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+              <span class="pill active"
+                style="border-color:var(--purple);background:var(--purple-dim);color:var(--purple)">DB손해보험 8회</span>
+              <span class="pill active"
+                style="border-color:var(--purple);background:var(--purple-dim);color:var(--purple)">현대해상 8회</span>
+              <span class="pill">KB손해보험 6회</span>
+              <span class="pill">롯데손해보험 3회</span>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--claude);margin-bottom:8px">Claude <span
+                style="color:var(--text-muted);font-weight:400">(120개 답변 중)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+              <span class="pill active"
+                style="border-color:var(--purple);background:var(--purple-dim);color:var(--purple)">KB손해보험 6회</span>
+              <span class="pill">현대해상 5회</span>
+              <span class="pill">메리츠화재 4회</span>
+              <span class="pill">한화손해보험 2회</span>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--gemini);margin-bottom:8px">Gemini <span
+                style="color:var(--text-muted);font-weight:400">(111개 답변 중)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="pill">메리츠화재 3회</span>
+              <span class="pill">KB손해보험 2회</span>
+              <span class="pill">DB손해보험 1회</span>
+              <span class="pill">AXA 1회</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-card-title">미언급 답변의 감정 · 출처</div>
+          <div class="compare-card-sub">삼성화재 없이 구성된 답변의 톤과 참조 소스</div>
+
+          <table class="heatmap-table" style="margin-top:8px">
+            <thead>
+              <tr>
+                <th></th>
+                <th>긍정</th>
+                <th>중립</th>
+                <th>부정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:13px">Claude</td>
+                <td class="heat-high" style="font-size:14px">86%</td>
+                <td class="heat-zero" style="font-size:14px">3%</td>
+                <td class="heat-low" style="font-size:14px">11%</td>
+              </tr>
+              <tr>
+                <td style="font-size:13px">Gemini</td>
+                <td class="heat-high" style="font-size:14px">83%</td>
+                <td class="heat-zero" style="font-size:14px">2%</td>
+                <td class="heat-low" style="font-size:14px">15%</td>
+              </tr>
+              <tr>
+                <td style="font-size:13px">ChatGPT</td>
+                <td class="heat-high" style="font-size:14px">79%</td>
+                <td class="heat-zero" style="font-size:14px">4%</td>
+                <td class="heat-low" style="font-size:14px">17%</td>
+              </tr>
+              <tr>
+                <td style="font-size:13px">Perplexity</td>
+                <td class="heat-mid" style="font-size:14px">73%</td>
+                <td class="heat-zero" style="font-size:14px">2%</td>
+                <td class="heat-mid" style="font-size:14px">25%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top:20px;padding-top:12px;border-top:1px solid var(--border)">
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px">주요 참조 출처 (삼성화재 미언급 답변)</div>
+            <ul class="domain-list">
+              <li class="domain-item"><span class="domain-name">blog.naver.com</span><span
+                  class="domain-count">262</span></li>
+              <li class="domain-item"><span class="domain-name">youtube.com</span><span class="domain-count">230</span>
+              </li>
+              <li class="domain-item"><span class="domain-name">a-ha.io</span><span class="domain-count">177</span></li>
+              <li class="domain-item"><span class="domain-name">banksalad.com</span><span
+                  class="domain-count">129</span></li>
+              <li class="domain-item"><span class="domain-name" style="color:var(--purple)">kbthink.com</span><span
+                  class="domain-count" style="color:var(--purple)">20</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warning" style="margin-top:24px">
+        <div class="callout-title">⚠️ 핵심 시사점</div>
+        <div class="callout-text">
+          삼성화재가 빠진 답변에서 <strong>KB손해보험이 가장 자주 대체재로 등장</strong>(ChatGPT·Claude에서 1위)합니다.
+          Perplexity에서는 DB손해보험·현대해상이 각 8회로 가장 많이 언급되어 LLM별로 대체 경쟁자가 다릅니다.
+          이 답변들의 주요 출처는 <strong>티스토리(221), 네이버 블로그(262), 유튜브(230), a-ha(177), 뱅크샐러드(129)</strong>로, 이 플랫폼에서 삼성화재 콘텐츠가 부재하면 자연스럽게
+          경쟁사로 대체됩니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10: STRATEGIC IMPLICATIONS -->
+  <div class="section" style="border-bottom:none">
+    <div class="container">
+      <div class="section-num">Section 10</div>
+      <h2 class="section-title">GEO 전략적 시사점 및 우선순위</h2>
+      <p class="section-insight">
+        데이터 분석 결과를 바탕으로 삼성화재의 GEO 경쟁력을 강화하기 위한 핵심 전략 방향을 제시합니다.
+      </p>
+
+      <div style="display:grid;gap:20px">
+        <!-- Priority 1 -->
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;border-left:4px solid var(--red)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div
+              style="background:var(--red-dim);color:var(--red);font-size:12px;font-weight:700;padding:4px 12px;border-radius:4px">
+              P1 — 최우선</div>
+            <div style="font-size:18px;font-weight:700">비브랜드 키워드 콘텐츠 공략</div>
+          </div>
+          <div style="font-size:14px;color:var(--text-dim);line-height:1.8">
+            현재 가장 큰 격차는 <strong>"삼성화재"를 언급하지 않은 일반 보험 질문에서의 노출 부재</strong>입니다.
+            "자동차보험 비교", "보험료 절약 방법", "실비보험 추천" 등의 키워드에 대응하는 콘텐츠를 공식 도메인(samsungfire.com, direct.samsungfire.com)에 체계적으로
+            구축해야 합니다.
+            FAQ, 가이드, 비교 콘텐츠 형식이 LLM 인용에 가장 효과적입니다.
+          </div>
+        </div>
+
+        <!-- Priority 2 -->
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;border-left:4px solid var(--orange)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div
+              style="background:var(--orange-dim);color:var(--orange);font-size:12px;font-weight:700;padding:4px 12px;border-radius:4px">
+              P2 — 중요</div>
+            <div style="font-size:18px;font-weight:700">3자 플랫폼 콘텐츠 시딩 전략</div>
+          </div>
+          <div style="font-size:14px;color:var(--text-dim);line-height:1.8">
+            Gemini와 Perplexity는 <strong>티스토리, 유튜브, 네이버 블로그, a-ha.io, 뱅크샐러드</strong>를 적극 인용합니다.
+            특히 티스토리는 서브도메인 분산으로 기존 분석에서 누락되었으나, 합산 시 Gemini 비삼성 1위(143개), Perplexity 3위(78개)로 가장 영향력 있는 블로그 플랫폼입니다.
+            이 플랫폼들에 삼성화재 상품을 긍정적으로 언급하는 양질의 콘텐츠(리뷰, 비교, 체험기)를 확보하는 것이 비브랜드 질문에서의 간접 노출을 높이는 핵심 경로입니다.
+          </div>
+        </div>
+
+        <!-- Priority 3 -->
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;border-left:4px solid var(--blue)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div
+              style="background:var(--blue-dim);color:var(--blue);font-size:12px;font-weight:700;padding:4px 12px;border-radius:4px">
+              P3 — 기반 강화</div>
+            <div style="font-size:18px;font-weight:700">LLM별 맞춤 기술 최적화</div>
+          </div>
+          <div style="font-size:14px;color:var(--text-dim);line-height:1.8">
+            <strong>Claude에서의 인용률이 전반적으로 가장 낮습니다(59%).</strong> Claude는 Schema.org 구조화 데이터와 명확한 HTML 시맨틱에 더 의존하는 경향이
+            있으므로, 기술적 SEO 점검이 필요합니다.
+            또한 robots.txt, sitemap.xml 검토를 통해 AI 크롤러(GPTBot, Anthropic-AI, Google-Extended)에 대한 접근 허용 정책을 점검해야 합니다.
+          </div>
+        </div>
+
+        <!-- Priority 4 -->
+        <div
+          style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;border-left:4px solid var(--green)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div
+              style="background:var(--green-dim);color:var(--green);font-size:12px;font-weight:700;padding:4px 12px;border-radius:4px">
+              P4 — 확장</div>
+            <div style="font-size:18px;font-weight:700">보상 단계 강점을 전 여정으로 확산</div>
+          </div>
+          <div style="font-size:14px;color:var(--text-dim);line-height:1.8">
+            보상(보험금 청구) 단계에서는 비브랜드 질문에서도 Perplexity 53%, Gemini 47%의 높은 노출을 보여줍니다.
+            이 단계의 콘텐츠 패턴(구체적 절차 안내, 실용 가이드)을 <strong>탐색·가입·유지 단계의 콘텐츠에도 동일하게 적용</strong>하면 전 여정에서의 자연 노출을 개선할 수 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div style="margin-bottom:8px;font-size:14px;color:var(--text-dim)">삼성화재 GEO 현황 분석 리포트</div>
+    <div>분석 기준일: 2026년 4월 · 4대 LLM (ChatGPT, Gemini, Claude, Perplexity) · 284개 질문 세트 · 7,456개 인용 URL</div>
+    <div style="margin-top:4px">Prepared by Etribe IA Research Lab</div>
+  </div>
+
+</body>
+
+</html>
